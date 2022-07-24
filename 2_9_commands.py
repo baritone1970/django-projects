@@ -15,6 +15,8 @@
 #     основываясь на лайках/дислайках к этой статье.
 # 11) Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
 
+from D2_9.NewsPortal.models import *
+
 # Создание двух пользователей (с помощью метода User.objects.create_user('username')).
 u1 = User.objects.create_user('u1')
 u2 = User.objects.create_user('u2')
