@@ -16,6 +16,9 @@
 # Применяем миграции к базе данных
 # (venv) ~/django-projects/D2_9 $ python manage.py migrate
 #
+# Для запуска сервера используем команду в консоли:
+# (venv) ~/django-projects/D2_9 $ python manage.py runserver
+#
 # Чтобы получить доступ к django shell:
 # (venv) ~/django-projects/D2_9 $ python manage.py shell
 
