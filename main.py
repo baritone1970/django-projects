@@ -1,5 +1,7 @@
 # Устанавливаем Django в свежее виртуальное окружение:
 # (venv) ~/django-projects $ pip3 install django
+# И полезный пакет фильтрации
+# (venv) ~/django-projects $ pip3 install django-filter
 #
 # И запускаем команду создания проекта:
 # (venv) ~/django-projects $ django-admin startproject D2_9
@@ -15,6 +17,9 @@
 #
 # Применяем миграции к базе данных
 # (venv) ~/django-projects/D2_9 $ python manage.py migrate
+#
+# Cоздаём администратора командой:
+# (venv) ~/django-projects/D2_9 $ python manage.py createsuperuser
 #
 # Для запуска сервера используем команду в консоли:
 # (venv) ~/django-projects/D2_9 $ python manage.py runserver

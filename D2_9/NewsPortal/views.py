@@ -1,8 +1,41 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import ListView
-from .models import Product
+from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
+from .models import Post    # Класс Post, который мы определили в файле models.py
+
+def news(request):
+    return HttpResponse("<h1>Breaking news!!</h1>")
+
+class NewsList(ListView):
+   model = Post
+   ordering = 'name'
+   template_name = 'products.html'
+   context_object_name = 'products'
+   paginate_by = 2
+
+   # Переопределяем функцию получения списка товаров
+   def get_queryset(self):
+       # Получаем обычный запрос
+       queryset = super().get_queryset()
+       # Используем наш класс фильтрации.
+       # self.request.GET содержит объект QueryDict, который мы рассматривали
+       # в этом юните ранее.
+       # Сохраняем нашу фильтрацию в объекте класса,
+       # чтобы потом добавить в контекст и использовать в шаблоне.
+       self.filterset = ProductFilter(self.request.GET, queryset)
+       # Возвращаем из функции отфильтрованный список товаров
+       return self.filterset.qs
+
+   def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       # Добавляем в контекст объект фильтрации.
+       context['filterset'] = self.filterset
+       return context
 
 
-class ProductsList(ListView):
+class ProductDetail(DetailView):
+   model = Product
+   template_name = 'product.html'
+   context_object_name = 'product'

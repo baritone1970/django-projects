@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
+# Команды использования этой модели выполняются в консоли django и
+
 # Модель Author
 # Модель, содержащая объекты всех авторов. Имеет следующие поля:
 # связь «один к одному» с встроенной моделью пользователей User; (см. 2.6)

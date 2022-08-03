@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from NewsPortal import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),  # для автоматических страниц flatpages
-    path('news/', D2_9.NewsPortal),
+    path('news/', views.news),
 ]
