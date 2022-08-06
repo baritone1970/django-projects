@@ -22,20 +22,20 @@ class Author(models.Model):
         carma = 0
 
         # суммарный рейтинг каждой статьи автора умножается на 3;
-        post_list = Post.objects.filter(id_author=self, type=Post.article)
+        post_list = Post.objects.filter(author_user=self, type=Post.article)
         post_rating_list = post_list.values("rating")
         for item in post_rating_list:
             carma += 3 * item["rating"]
 
         # суммарный рейтинг всех комментариев автора;
         user = self.author_user
-        comment_rating_list = Comment.objects.filter(id_user=user).values("rating")
+        comment_rating_list = Comment.objects.filter(author_user=user).values("rating")
         for item in comment_rating_list:
             carma += item["rating"]
 
         # суммарный рейтинг всех комментариев к статьям автора;
         for post in post_list:
-            comment_in_post = Comment.objects.filter(id_post=post).values("rating")
+            comment_in_post = Comment.objects.filter(post=post).values("rating")
             carma += sum(item["rating"] for item in comment_in_post)
 
         self.rating = carma
@@ -115,7 +115,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
-    time_of_creation = models.DateTimeField(auto_created=True)
+    time_of_creation = models.DateTimeField(auto_now_add=True) # auto_now_add - автоустанавливает текущее время
     rating = models.IntegerField(default=0)
 
     # Методы like() и dislike() в моделях Comment и Post, которые увеличивают/уменьшают рейтинг на единицу.

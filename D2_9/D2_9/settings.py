@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware', # TODO узнать назначение этого middleware
 ]
 
-ROOT_URLCONF = 'D2_9.urls'
+ROOT_URLCONF = 'D2_9.urls'  #ModuleNotFoundError: No module named 'D2_9.urls.py'; 'D2_9.urls' is not a package
 
 TEMPLATES = [
     {

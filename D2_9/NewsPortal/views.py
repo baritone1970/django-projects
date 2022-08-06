@@ -4,16 +4,19 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.http import HttpResponse
 from .models import Post    # Класс Post, который мы определили в файле models.py
+from .filters import NewsFilter
 
 def news(request):
     return HttpResponse("<h1>Breaking news!!</h1>")
 
 class NewsList(ListView):
    model = Post
-   ordering = 'name'
-   template_name = 'products.html'
-   context_object_name = 'products'
+   ordering = 'time_of_creation'
+   template_name = 'news.html'
+   context_object_name = 'news'
    paginate_by = 2
+
+   # наследуется метод .as_view()
 
    # Переопределяем функцию получения списка товаров
    def get_queryset(self):
@@ -24,7 +27,7 @@ class NewsList(ListView):
        # в этом юните ранее.
        # Сохраняем нашу фильтрацию в объекте класса,
        # чтобы потом добавить в контекст и использовать в шаблоне.
-       self.filterset = ProductFilter(self.request.GET, queryset)
+       self.filterset = NewsFilter(self.request.GET, queryset)
        # Возвращаем из функции отфильтрованный список товаров
        return self.filterset.qs
 
@@ -35,7 +38,7 @@ class NewsList(ListView):
        return context
 
 
-class ProductDetail(DetailView):
-   model = Product
+class NewsDetail(DetailView):
+   model = Post
    template_name = 'product.html'
    context_object_name = 'product'

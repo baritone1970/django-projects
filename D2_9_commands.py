@@ -21,6 +21,7 @@ from NewsPortal.models import Category
 from NewsPortal.models import Post
 from NewsPortal.models import PostCategory
 from NewsPortal.models import Comment
+#from NewsPortal.models import *
 
 # Создание двух пользователей (с помощью метода User.objects.create_user('username')).
 u1 = User.objects.create_user('u1')
@@ -43,7 +44,6 @@ PostCategory.objects.create(post=post2, category=c1)
 PostCategory.objects.create(post=post2, category=c2)
 PostCategory.objects.create(post=post3, category=c3)
 # Создание как минимум 4 комментария к разным объектам модели Post
-# пока не пошло дело: "sqlite3.IntegrityError: NOT NULL constraint failed: NewsPortal_comment.time_of_creation"
 comment1 = Comment.objects.create(post=post1, user=u1, text="Комментарий пользователя 1 к статье 1", rating=0)
 comment2 = Comment.objects.create(post=post2, user=u2, text="Комментарий пользователя 2 к статье 2", rating=0)
 comment3 = Comment.objects.create(post=post3, user=u1, text="Комментарий пользователя 1 к новости 1", rating=0)
@@ -55,7 +55,7 @@ post2.like() # Итоговый рейтинг +1 статье 2
 post3.dislike()
 post3.like()
 post3.dislike() # Итоговый рейтинг -2 новости 1
-# 8) Обновить рейтинги пользователей (вернее, авторов).
+# 8) Обновить рейтинги пользователей (вернее, авторов) --- это не сработало.
 a1.update_rating()
 a2.update_rating()
 # 9) Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
