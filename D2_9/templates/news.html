@@ -10,11 +10,11 @@
     <hr>
     {% if news %}
         <table>
-            <tr><td>Автор</td><td>Заголовок</td><td>Время   </td></tr>
+            <tr><td>Автор</td><td><h2>Заголовок</h2></td><td>Время   </td></tr>
             {% for item in news %}
             <!-- {{ news }} -->
-                <tr><td>{{item.post_author.author_user}}</td><td>{{item.header}}</td><td>{{item.time_of_creation}}</td></tr>
-                <tr><td colspan="3">{{item.text}}</td></tr>
+                <tr><td>{{item.post_author.author_user}}</td><td><h3>{{item.header}}</h3></td><td>{{item.time_of_creation}}</td></tr>
+                <tr><td colspan="3">{{ item.text|truncatewords:50 }}</td></tr>
             {% endfor %}
         </table>
     {% else %}

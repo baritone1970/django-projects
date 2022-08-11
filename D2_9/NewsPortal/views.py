@@ -15,7 +15,7 @@ class NewsList(ListView):
    template_name = 'news.html'
     # Его надо указать, чтобы обратиться к списку объектов в
    context_object_name = 'news'   # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
-   paginate_by = 2
+   paginate_by = 10
 
    # наследуется метод .as_view()
 
