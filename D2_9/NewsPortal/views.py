@@ -11,9 +11,10 @@ def news(request):
 
 class NewsList(ListView):
    model = Post
-   ordering = 'time_of_creation'
+   ordering = 'time_of_creation'    # Поле, которое будет использоваться для сортировки объектов
    template_name = 'news.html'
-   context_object_name = 'news'
+    # Его надо указать, чтобы обратиться к списку объектов в
+   context_object_name = 'news'   # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
    paginate_by = 2
 
    # наследуется метод .as_view()
@@ -40,5 +41,5 @@ class NewsList(ListView):
 
 class NewsDetail(DetailView):
    model = Post
-   template_name = 'product.html'
-   context_object_name = 'product'
+   template_name = 'newsdetail.html'
+   context_object_name = 'newsdetail'

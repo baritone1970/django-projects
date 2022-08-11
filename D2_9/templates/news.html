@@ -1,29 +1,23 @@
 {% extends 'flatpages/default.html' %}
 
-{% load custom_filters %}
+{% load custom_filters %} <!-- Ага, вот зачем файл custom_filters.py -->
 
-{% block title %}
-Products
-{% endblock title %}
+{% block title %}Новости{% endblock title %}
 
 {% block content %}
-   <h1>Все новости</h1>
-   <h3>{{ time_now|date:'M d Y' }}</h3>
-   <hr>
-   {% if news %}
-       <table>
-
-           {% for post in news %}
-           <tr>
-               <td>{{ Post.time_of_creation }}
-                   {{ Post.post_author}}<br>
-                   {{ Post.text}}<br>
-               </td>
-           </tr>
-           {% endfor %}
-
-       </table>
-   {% else %}
-       <h2>Статей нет!</h2>!
-   {% endif %}
+    <h1>Все новости</h1>
+    <h3>{{ time_now|date:'M d Y' }}</h3>
+    <hr>
+    {% if news %}
+        <table>
+            <tr><td>Автор</td><td>Заголовок</td><td>Время   </td></tr>
+            {% for item in news %}
+            <!-- {{ news }} -->
+                <tr><td>{{item.post_author.author_user}}</td><td>{{item.header}}</td><td>{{item.time_of_creation}}</td></tr>
+                <tr><td colspan="3">{{item.text}}</td></tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>Статей нет!</h2>!
+    {% endif %}
 {% endblock content %}
