@@ -41,9 +41,15 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',  # sites framework, позволяет разделять страницы между несколькими сайтами
     'django.contrib.flatpages',
+    'django.contrib.redirects',     # Хочу иметь перенаправления с пропавших адресов!
 
-    'django_filters',
+    'django_filters',   # TODO здесь стандартные фильтры, а я ещё не изучил их настройку и использование
     'NewsPortal',   # Здесь наш собственный код.
+    'allauth',      # надо для пакета allauth по аутентификации пользователей
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',   # По гуглу. хорошо бы ещё через госуслуги
+#    'allauth.socialaccount.providers.github',
 ]
 
 #добавляем переменную для указания сайта для приложения sites:
@@ -57,7 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware', # TODO узнать назначение этого middleware
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',   # TODO узнать назначение этого middleware
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',   # Хочу иметь перенаправления с пропавших адресов!
 ]
 
 ROOT_URLCONF = 'D2_9.urls'  #ModuleNotFoundError: No module named 'D2_9.urls.py'; 'D2_9.urls' is not a package
@@ -73,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -110,11 +119,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Добавлено для работы django-allauth
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# Добавлено для работы django-allauth
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/news/'   # перенаправление после регистрации
+# Настройка входа по электронной почте, имя пользователя не требуется, верификация почты не производится
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 

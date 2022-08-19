@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block head_title %}{% endblock head_title %}</title>
+    </head>
+    <body>
+        {% block body %}
+            {% block content %}
+            {% endblock content %}
+        {% endblock body %}
+        {# А здесь что может быть вставлено?#}
+        {% block extra_body %}
+        {% endblock extra_body %}
+    </body>
+</html>
