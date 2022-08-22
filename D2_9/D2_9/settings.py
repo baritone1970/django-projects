@@ -129,12 +129,12 @@ AUTHENTICATION_BACKENDS = [
 # Добавлено для работы django-allauth
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/news/'   # перенаправление после регистрации
-# Настройка входа по электронной почте, имя пользователя не требуется, верификация почты не производится
+# Настройка входа по электронной почте
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_UNIQUE_EMAIL = True                         # А почта должна быть уникальной
+ACCOUNT_USERNAME_REQUIRED = False                   # Можно иметь пользователя без имени и входить по почте
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'    # Метод входа по почте или имени
+ACCOUNT_EMAIL_VERIFICATION = 'none'                 # Проверять почту не будем, можно фальшивую
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

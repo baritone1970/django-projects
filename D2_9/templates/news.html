@@ -1,28 +1,32 @@
 {% extends 'flatpages/default.html' %}
 
-{% load custom_filters %} <!-- Ага, вот зачем файл custom_filters.py -->
+{% load custom_filters %}   {# В файле NewsPortal/templatetag/custom_filters.py есть фильтр censor #}
+{% load custom_tags %}      {# В файле NewsPortal/templatetag/custom_tags.py есть тэг current_time для времени #}
 
 {% block title %}Новости{% endblock title %}
 
 {% block content %}
-    <h1>Все новости</h1>
-    <p>{{ time_now|date:'d.M.Y' }}</p>
+    <h1>Все новости</h1>{{ news }}
+    {#{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
+    <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ news|length }} новостей.</p>
     <hr>
-    {% if news %}
+    {% if news %}  {# определено в view.py, class NewsList(ListView):#}
         <table>
             <tr><td>Автор</td><td><h2>Заголовок</h2></td><td>Время   </td></tr>
             {% for item in news %}
-            <!-- {{ news }} -->
-                <tr><td>{{item.post_author.author_user}}</td><td><h3>{{item.header}}</h3></td><td>{{item.time_of_creation}}</td></tr>
-                <tr><td colspan="3">{{ item.text|truncatewords:50 }}</td></tr>
+            {# {{item.post_author.author_user}} #}
+                <tr><td>{{item.post_author.author_user.first_name}} {{item.post_author.author_user.last_name}}</td>
+                    <td><h3>{{item.header|truncatechars:20|censor}}</h3></td>
+                    <td>{{item.time_of_creation}}</td></tr>
+                <tr><td colspan="3">{{ item.text|truncatewords:50|censor }}</td></tr>
             {% endfor %}
         </table>
-    {% else %}
+    {% else %} {# А можно использовать тэг {% empty %}, см. https://django.fun/docs/django/ru/4.0/ref/class-based-views/generic-display/ #}
         <h2>Статей нет!</h2>!
     {% endif %}
-    {#Теперь займёмся пролистыванием страниц#}
-    {% if page_obj.has_previous %}
-       &lt;&lt;<a href="?page=1">1</a>
+    {# Теперь займёмся пролистыванием страниц #}
+    &lt;&lt;{% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
        {% if page_obj.previous_page_number != 1 %}
            ...
            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
@@ -38,6 +42,6 @@
        {% if paginator.num_pages != page_obj.next_page_number %}
            ...
            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}&gt;&gt;
-   {% endif %}
+       {% endif %}
+   {% endif %}&gt;&gt;
 {% endblock content %}

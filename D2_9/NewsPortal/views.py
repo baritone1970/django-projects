@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from datetime import datetime
+# На ListView делаем список новостей, на DetailView - показ публикаций, и, возможно, авторов
 from django.views.generic import ListView, DetailView
 from django.http import HttpResponse
 from .models import Post    # Класс Post, который мы определили в файле models.py
@@ -17,10 +18,15 @@ class NewsList(ListView):
    context_object_name = 'news'   # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
    paginate_by = 10 #TODO - разобраться с переходом к следующей странице при пажинации
 
-   # наследуется метод .as_view()
+   # наследуется метод .as_view(), переопределяем get_queryset() и get_context_data()
+   # Можно ещё что-то с get_object() поделать, но вроде не обязательно.
+   # Смотрим
 
 #TODO - ещё не понял, как разобраться с сортировкой только новостей!
-   # Переопределяем функцию получения списка товаров
+   # Вот здесь показано, как фильтровать выдачу через переопределение  get_queryset()
+   # https://django.fun/docs/django/ru/4.0/topics/db/managers/
+   # Здесь пока переопределяем функцию получения списка товаров
+   # с целью добавления внешнего фильтра, и больше ничего.
    def get_queryset(self):
        # Получаем обычный запрос
        queryset = super().get_queryset()
@@ -42,7 +48,7 @@ class NewsList(ListView):
        context = super().get_context_data(**kwargs)
        # К словарю добавим текущую дату в ключ 'time_now'.
        context['time_now'] = datetime.utcnow()
-       # Добавляем в контекст объект фильтрации.
+       # Добавляем в контекст объект фильтрации. TODO Как это действует - не понял
        context['filterset'] = self.filterset
        return context
 
@@ -51,3 +57,6 @@ class NewsDetail(DetailView):
    model = Post
    template_name = 'newsdetail.html'
    context_object_name = 'newsdetail'
+
+#tmp=NewsList()
+#tmp.model.post_author.

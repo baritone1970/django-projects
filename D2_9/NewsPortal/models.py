@@ -126,3 +126,6 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+#tmp=Post()
+#tmp.post_author.verbose_name
