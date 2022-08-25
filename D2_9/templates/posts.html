@@ -5,17 +5,20 @@
 
 {% block title %}Новости{% endblock title %}
 
+{# Формы для фильтрации новостей - в разделе D4.2 #}
+
 {% block content %}
-    <h1>Все новости</h1>{{ news }}
-    {#{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
+    <h1>Все новости</h1>
+    {#{{ news }}{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
+{{ request }}
     <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ news|length }} новостей.</p>
     <hr>
     {% if news %}  {# определено в view.py, class NewsList(ListView):#}
         <table>
             <tr><td>Автор</td><td><h2>Заголовок</h2></td><td>Время   </td></tr>
             {% for item in news %}
-            {# {{item.post_author.author_user}} #}
-                <tr><td>{{item.post_author.author_user.first_name}} {{item.post_author.author_user.last_name}}</td>
+            {# {{item.post_author.author_user.first_name}} {{item.post_author.author_user.last_name}} #}
+                <tr><td>{{item.post_author}}</td>
                     <td><h3>{{item.header|truncatechars:20|censor}}</h3></td>
                     <td>{{item.time_of_creation}}</td></tr>
                 <tr><td colspan="3">{{ item.text|truncatewords:50|censor }}</td></tr>
@@ -25,23 +28,30 @@
         <h2>Статей нет!</h2>!
     {% endif %}
     {# Теперь займёмся пролистыванием страниц #}
-    &lt;&lt;{% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
-       {% if page_obj.previous_page_number != 1 %}
+    {# Информация о предыдущей странице #}
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;</a>
+        <a href="?page=1">1</a>
+        {% if page_obj.previous_page_number != 1 %}
            ...
            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
+        {% endif %}
+    {% else %}
+        &lt;&lt;
+    {% endif %}
 
-   {# Информация о текущей странице #}
-   {{ page_obj.number }}
+    {# Информация о текущей странице #}
+    {{ page_obj.number }}
 
-   {# Информация о следующих страницах #}
-   {% if page_obj.has_next %}
-       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
+    {# Информация о следующих страницах #}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
            ...
            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}&gt;&gt;
+        {% endif %}
+        <a href="?page={{ page_obj.next_page_number }}">&gt;&gt;</a>
+    {% else %}
+        &gt;&gt;
+    {% endif %}
 {% endblock content %}

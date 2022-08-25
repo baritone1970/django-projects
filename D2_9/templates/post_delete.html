@@ -1,0 +1,12 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Удаление поста</h1>
+<hr>
+<form action="" method="post">
+    {# D4.5 csrf_token это для защиты от атаки CSRF, межсайтовой подделки запроса, #}
+    {% csrf_token %}        {#https://docs.djangoproject.com/en/4.0/ref/csrf/ #}
+    <p>Удаляем "{{ object.name }}"?</p>
+    <input type="submit" value="Delete" />
+</form>
+{% endblock content %}

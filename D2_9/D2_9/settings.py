@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.redirects',     # Хочу иметь перенаправления с пропавших адресов!
 
-    'django_filters',   # TODO здесь стандартные фильтры, а я ещё не изучил их настройку и использование
+    'django_filters',   # см. D4.2 TODO здесь дженерики фильтров, а я ещё не изучил их настройку и использование
     'NewsPortal',   # Здесь наш собственный код.
     'allauth',      # надо для пакета allauth по аутентификации пользователей
     'allauth.account',
@@ -161,3 +161,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+# D7.3.
+# В конфигурацию проекта (settings.py) дописываем следующие строки (см. настройки celery.py):
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

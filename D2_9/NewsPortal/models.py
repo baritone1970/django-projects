@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Команды использования этой модели выполняются в консоли django и
-
 # Модель Author
 # Модель, содержащая объекты всех авторов. Имеет следующие поля:
 # связь «один к одному» с встроенной моделью пользователей User; (см. 2.6)
@@ -41,6 +39,12 @@ class Author(models.Model):
         self.rating = carma
         self.save()
 
+#    def __str__(self):      # Не забываем добавлять, чтобы было читаемое имя автора на странице!
+#        aid = self.author_user
+#        fullname = User.get_full_name().upper()
+#            #.objects.get_by_natural_key(aid)
+#        return fullname
+
 
 # Модель Category
 # Категории новостей/статей — темы, которые они отражают (спорт, политика, образование и т. д.).
@@ -48,6 +52,11 @@ class Author(models.Model):
 # (в определении поля необходимо написать параметр unique = True).
 class Category(models.Model):
     cat_name = models.CharField(max_length=20, unique=True)
+    subscribers = models.ManyToManyField(User)
+
+    def __str__(self):      # Не забываем добавлять, чтобы было читаемая категория при перечислении в формах!
+        return self.cat_name #
+
 
 
 # Модель Post
@@ -64,6 +73,10 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+    # Кортеж POST_TYPE задаётся, чтобы иметь возможность брать человекочитаемое название из списка выбора
+    # с помощью автоматически создаваемого метода get_FOO_display(), где FOO — это название поля.
+    # Для варианта выбора (article, 'Статья') article = "AR" хранится в базе данных, а
+    # а 'Статья' берётся с помощью метода get_FOO_display() TODO D2.7
     article = "AR"
     news = "NS"
     POST_TYPE = [(article, 'Статья'), (news, 'Новость')]
@@ -90,6 +103,9 @@ class Post(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+    def __str__(self):
+        return self.header
 
 
 # Модель PostCategory

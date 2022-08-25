@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Пост</h1>
+<hr>
+<form action="" method="post">
+    {# D4.5 csrf_token это для защиты от атаки CSRF, межсайтовой подделки запроса,#}
+            {# https://docs.djangoproject.com/en/4.0/ref/csrf/ #}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+{% endblock content %}
