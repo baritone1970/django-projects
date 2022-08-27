@@ -11,11 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import os.path # Для поиска шаблонов flatpages
+import os.path  # Для поиска шаблонов flatpages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -27,7 +26,6 @@ SECRET_KEY = 'django-insecure-p3*(^r2)yg1o=*p+zcwz@44&tj@x6ykl=jltq0@6b0i#16yzgt
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -41,18 +39,18 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',  # sites framework, позволяет разделять страницы между несколькими сайтами
     'django.contrib.flatpages',
-    'django.contrib.redirects',     # Хочу иметь перенаправления с пропавших адресов!
+    'django.contrib.redirects',  # Хочу иметь перенаправления с пропавших адресов!
 
-    'django_filters',   # см. D4.2 TODO здесь дженерики фильтров, а я ещё не изучил их настройку и использование
-    'NewsPortal',   # Здесь наш собственный код.
-    'allauth',      # надо для пакета allauth по аутентификации пользователей
+    'django_filters',  # см. D4.2 TODO здесь дженерики фильтров, а я ещё не изучил их настройку и использование
+    'NewsPortal',  # Здесь наш собственный код.
+    'allauth',  # надо для пакета allauth по аутентификации пользователей
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',   # По гуглу. хорошо бы ещё через госуслуги
-#    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',  # По гуглу. хорошо бы ещё через госуслуги
+    #'allauth.socialaccount.providers.github',
 ]
 
-#добавляем переменную для указания сайта для приложения sites:
+# добавляем переменную для указания сайта для приложения sites:
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -63,11 +61,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',   # TODO узнать назначение этого middleware
-    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',   # Хочу иметь перенаправления с пропавших адресов!
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',  # TODO узнать назначение этого middleware
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',  # Хочу иметь перенаправления с пропавших адресов!
 ]
 
-ROOT_URLCONF = 'D2_9.urls'  #ModuleNotFoundError: No module named 'D2_9.urls.py'; 'D2_9.urls' is not a package
+ROOT_URLCONF = 'D2_9.urls'  # ModuleNotFoundError: No module named 'D2_9.urls.py'; 'D2_9.urls' is not a package
 
 TEMPLATES = [
     {
@@ -77,18 +75,15 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # дефолтно, но `allauth` needs this from django
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # `allauth` needs this from django
-                'django.template.context_processors.request',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'D2_9.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -99,7 +94,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -128,13 +122,13 @@ AUTHENTICATION_BACKENDS = [
 ]
 # Добавлено для работы django-allauth
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/news/'   # перенаправление после регистрации
+LOGIN_REDIRECT_URL = '/news/'  # перенаправление после регистрации
 # Настройка входа по электронной почте
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True                         # А почта должна быть уникальной
-ACCOUNT_USERNAME_REQUIRED = False                   # Можно иметь пользователя без имени и входить по почте
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'    # Метод входа по почте или имени
-ACCOUNT_EMAIL_VERIFICATION = 'none'                 # Проверять почту не будем, можно фальшивую
+ACCOUNT_UNIQUE_EMAIL = True  # А почта должна быть уникальной
+ACCOUNT_USERNAME_REQUIRED = False  # Можно иметь пользователя без имени и входить по почте
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Метод входа по почте или имени
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Проверять почту не будем, можно фальшивую
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -146,7 +140,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

@@ -15,11 +15,12 @@ def news(request):
     return HttpResponse("<h1>Breaking news!!</h1>")
 
 
-class NewsList(ListView):
+class PostList(ListView):
+    # Сюда можно передать дополнительный аргумент через path(), сейчас это header='Список новостей'
     model = Post
     ordering = '-time_of_creation'  # Поле для сортировки объектов, "-blabla" - обратный отсчёт
     template_name = 'posts.html'
-    context_object_name = 'news'  # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
+    context_object_name = 'news'    # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
     paginate_by = 2  # TODO - разобраться с переходом к следующей странице при пажинации
 
     # наследуется метод .as_view(), переопределяем get_queryset() и get_context_data()
@@ -33,13 +34,22 @@ class NewsList(ListView):
     # Здесь пока переопределяем функцию получения списка товаров
     # с целью добавления внешнего фильтра, и больше ничего.
     def get_queryset(self):
-        # Получаем обычный запрос
-        queryset = super().get_queryset()
+        # Отбираем для показа статьи или новости
+        #if self.request.path == '/article/':
+        #    posttype=Post.POST_TYPE[0][0]#(type='AR')
+        #else # '/news/'
+        #    posttype = Post.POST_TYPE[1][0]#(type='NS')
+        # Или лучше задавать в urls.py через **kwargs, чтобы не забыть и не запутаться в имеющихся типах постов?
+        # https://django.fun/docs/django/ru/4.0/topics/http/urls/
+        posttype = self.kwargs['posttype']
+        # Получаем запрос нужного типа постов, но без фильтров из filters.py
+        queryset = super().get_queryset().filter(type=posttype)
         # Используем наш класс фильтрации.
-        # self.request.GET содержит объект QueryDict, который мы рассматривали
-        # в этом юните ранее.
         # Сохраняем нашу фильтрацию в объекте класса,
         # чтобы потом добавить в контекст и использовать в шаблоне.
+        # Для фильтрации queryset предназначен django-filter
+        # https://django-filter.readthedocs.io/en/stable/guide/usage.html#
+        # self.request.GET содержит объект QueryDict, см. D4.2.2
         self.filterset = NewsFilter(self.request.GET, queryset)
         # Возвращаем из функции отфильтрованный список товаров
         return self.filterset.qs
@@ -55,7 +65,10 @@ class NewsList(ListView):
         context['time_now'] = datetime.utcnow()
         # Для анализа пути, по которому вызвали страницу,
         # чтобы решить, что отображать - новости или статьи.....
-        context['request'] = self.request.path
+        context['path'] = self.request.path
+        # **kwargs передаётся в класс из url.py верхнего уровня через path() ?
+        # https://django.fun/docs/django/ru/4.0/topics/http/urls/
+        context['header'] = self.kwargs['header']#.items()# .values() #
         # Добавляем в контекст объект фильтрации. TODO Как это действует - не понял
         context['filterset'] = self.filterset
         return context

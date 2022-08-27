@@ -52,7 +52,7 @@ class Author(models.Model):
 # (в определении поля необходимо написать параметр unique = True).
 class Category(models.Model):
     cat_name = models.CharField(max_length=20, unique=True)
-    subscribers = models.ManyToManyField(User)
+#    subscribers = models.ManyToManyField(User) # Фигня получилась, нужно напрямую сделать связную таблицу
 
     def __str__(self):      # Не забываем добавлять, чтобы было читаемая категория при перечислении в формах!
         return self.cat_name #
@@ -75,8 +75,8 @@ class Category(models.Model):
 class Post(models.Model):
     # Кортеж POST_TYPE задаётся, чтобы иметь возможность брать человекочитаемое название из списка выбора
     # с помощью автоматически создаваемого метода get_FOO_display(), где FOO — это название поля.
-    # Для варианта выбора (article, 'Статья') article = "AR" хранится в базе данных, а
-    # а 'Статья' берётся с помощью метода get_FOO_display() TODO D2.7
+    # Для варианта выбора (article, 'Статья') article = "AR" хранится в базе данных,
+    # а название 'Статья' берётся через "AR" с помощью метода get_FOO_display() TODO D2.7
     article = "AR"
     news = "NS"
     POST_TYPE = [(article, 'Статья'), (news, 'Новость')]

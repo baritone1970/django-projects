@@ -1,17 +1,17 @@
 {% extends 'flatpages/default.html' %}
 
-{% load custom_filters %}   {# В файле NewsPortal/templatetag/custom_filters.py есть фильтр censor #}
-{% load custom_tags %}      {# В файле NewsPortal/templatetag/custom_tags.py есть тэг current_time для времени #}
+{% load custom_filters %}   {# В файле NewsPortal/templatetag/custom_filters.py определён фильтр censor #}
+{% load custom_tags %}      {# В файле NewsPortal/templatetag/custom_tags.py определён тэг current_time для времени #}
 
 {% block title %}Новости{% endblock title %}
 
 {# Формы для фильтрации новостей - в разделе D4.2 #}
 
 {% block content %}
-    <h1>Все новости</h1>
-    {#{{ news }}{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
-{{ request }}
-    <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ news|length }} новостей.</p>
+    <h1>{{ header }}</h1>
+    {#{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
+    {# {{ path }} то же, даёт адрес запроса страницы, /news/ или /article/, пригодится для оформления #}
+    <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ news|length }} сообщения.</p>
     <hr>
     {% if news %}  {# определено в view.py, class NewsList(ListView):#}
         <table>

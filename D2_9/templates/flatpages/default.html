@@ -34,6 +34,9 @@
                <li class="nav-item">
                    <a class="nav-link" href="/registeredonly/">Зарегистрированным</a>
                </li>
+               <li class="nav-item">
+                   <p class="nav-link" align="right">Здравствуйте, {{user}}!</p>
+               </li>
            </ul>
        </div>
    </div>
@@ -41,7 +44,7 @@
 <!-- Page content-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 text-center">
+        <div class="col-lg-12 "> <!-- text-center-->
             {% block content %}
             {{ flatpage.content }}
             {% endblock content %}

@@ -20,12 +20,15 @@ from django.urls import include, path, re_path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),  # для автоматических страниц flatpages
-# Для аутентификации
-#    path('', include('protect.urls')),             # Это приложение я не делал
-#    path('sign/', include('sign.urls')),           # и это тоже. Попробую ограничиться allauth
-    path('accounts/', include('allauth.urls')),     # это тоже файл из набора allauth, как у flatpages
-# Для отображения новостей
-    path('news/', include('NewsPortal.urls')),
+    # Для аутентификации
+    #    path('', include('protect.urls')),             # Это приложение я не делал
+    #    path('sign/', include('sign.urls')),           # и это тоже. Попробую ограничиться allauth
+    path('accounts/', include('allauth.urls')),  # это тоже файл из набора allauth, как у flatpages
+    # Для отображения заголовка новостей или статей используем возможность include() дополнять **kwargs
+    # https://django.fun/docs/django/ru/4.0/topics/http/urls/ - см. передача дополнительных параметров в include
+    # 'header' - что показывать в заголовке, 'posttype' - что отбирать для показа, статьи или новости?
+    path('news/', include('NewsPortal.urls'), {'header': 'Новости', 'posttype': 'NS'}),
+    path('articles/', include('NewsPortal.urls'), {'header': 'Статьи', 'posttype': 'AR'}),
     # Эксперимент с отображением страниц с адресом, распознаваемым через регулярное выражение
-    re_path(r'.*', django.contrib.flatpages.views.flatpage, kwargs={'url':'/doublecontent/'}),
+    re_path(r'.*', django.contrib.flatpages.views.flatpage, kwargs={'url': '/doublecontent/'}),
 ]
