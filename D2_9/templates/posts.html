@@ -11,12 +11,15 @@
     <h1>{{ header }}</h1>
     {#{{ time_now|date:'d M Y' }} добавлено в выдачу класса NewsList(ListView) в view.py через get_context_data() #}
     {# {{ path }} то же, даёт адрес запроса страницы, /news/ или /article/, пригодится для оформления #}
-    <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ news|length }} сообщения.</p>
+    <p>Сегодня {% current_time '%d %b %Y' %}. На текущей странице {{ posts|length }} сообщения.</p>
     <hr>
-    {% if news %}  {# определено в view.py, class NewsList(ListView):#}
+{% block search %}
+<a href="{{ path }}search/">Ссылка на страницу поиска</a>
+{% endblock search %}
+    {% if posts %}  {# определено в view.py, class NewsList(ListView):#}
         <table>
             <tr><td>Автор</td><td><h2>Заголовок</h2></td><td>Время   </td></tr>
-            {% for item in news %}
+            {% for item in posts %}
             {# {{item.post_author.author_user.first_name}} {{item.post_author.author_user.last_name}} #}
                 <tr><td>{{item.post_author}}</td>
                     <td><h3>{{item.header|truncatechars:20|censor}}</h3></td>
@@ -30,11 +33,11 @@
     {# Теперь займёмся пролистыванием страниц #}
     {# Информация о предыдущей странице #}
     {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;</a>
+        <a href="?{% url_replace page=page_obj.previous_page_number %}">&lt;&lt;</a>
         <a href="?page=1">1</a>
         {% if page_obj.previous_page_number != 1 %}
            ...
-           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
         {% endif %}
     {% else %}
         &lt;&lt;
@@ -45,12 +48,12 @@
 
     {# Информация о следующих страницах #}
     {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
         {% if paginator.num_pages != page_obj.next_page_number %}
            ...
-           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
         {% endif %}
-        <a href="?page={{ page_obj.next_page_number }}">&gt;&gt;</a>
+        <a href="?{% url_replace page=page_obj.next_page_number %}">&gt;&gt;</a>
     {% else %}
         &gt;&gt;
     {% endif %}

@@ -30,5 +30,5 @@ urlpatterns = [
     path('news/', include('NewsPortal.urls'), {'header': 'Новости', 'posttype': 'NS'}),
     path('articles/', include('NewsPortal.urls'), {'header': 'Статьи', 'posttype': 'AR'}),
     # Эксперимент с отображением страниц с адресом, распознаваемым через регулярное выражение
-    re_path(r'.*', django.contrib.flatpages.views.flatpage, kwargs={'url': '/doublecontent/'}),
+#    re_path(r'.*', django.contrib.flatpages.views.flatpage, kwargs={'url': '/doublecontent/'}),
 ]

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse_lazy, reverse
 
 
 # Модель Author
@@ -82,10 +83,10 @@ class Post(models.Model):
     POST_TYPE = [(article, 'Статья'), (news, 'Новость')]
 
     post_author = models.ForeignKey(Author, on_delete=models.PROTECT)
-    type = models.CharField(max_length=2, choices=POST_TYPE, default=article)
+    type = models.CharField(max_length=2, choices=POST_TYPE, blank=False)#, default=article
     time_of_creation = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through="PostCategory")
-    header = models.CharField(max_length=255)  # TODO
+    header = models.CharField(max_length=255)  # TODO,
     text = models.TextField()  # TODO
     rating = models.IntegerField(default=0)
 
@@ -106,6 +107,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.header
+
+    def get_absolute_url(self):
+        # надо указать name='post_detail' в path() в urls.py
+        #kwargs={'pk': self.pk})# str(self.type)+'/'+str(self.pk) # #
+        absolute_url=reverse_lazy('post_detail', args=[str(self.pk)])
+        return absolute_url
 
 
 # Модель PostCategory

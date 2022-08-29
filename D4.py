@@ -20,7 +20,9 @@
 #  python manage.py shell
 #>>> from NewsPortal.forms import PostForm
 #>>> f = PostForm({'category': [8], 'header': 'sjfdsjkfdlkzjcv', 'text': 'slfddsz_fcjmzslrfmsr'})
+#>>> f = PostForm({'post_author': 3, 'category': [8], 'header': 'sjfdsjkfdlkzjcv', 'text': 'slfddsz_fcjmzslrfmsr'})
 #>>> f.is_valid()
 #>>> f.errors
+#>>> print(f)
 
 #TODO ПРи создании поста через форму ошибка ввода пользователя. запрограммируем аутентификацию сначала.

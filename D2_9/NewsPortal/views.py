@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from datetime import datetime
-from django.urls import reverse_lazy # TODO D4.5, используется в удалении постов, зачем не понял
+from django.urls import reverse, reverse_lazy  # TODO D4.5, используется в удалении постов, зачем не понял
 # На ListView делаем список новостей, на DetailView - показ публикаций, и, возможно, авторов
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
@@ -20,7 +20,7 @@ class PostList(ListView):
     model = Post
     ordering = '-time_of_creation'  # Поле для сортировки объектов, "-blabla" - обратный отсчёт
     template_name = 'posts.html'
-    context_object_name = 'news'    # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
+    context_object_name = 'posts'  # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
     paginate_by = 2  # TODO - разобраться с переходом к следующей странице при пажинации
 
     # наследуется метод .as_view(), переопределяем get_queryset() и get_context_data()
@@ -35,9 +35,9 @@ class PostList(ListView):
     # с целью добавления внешнего фильтра, и больше ничего.
     def get_queryset(self):
         # Отбираем для показа статьи или новости
-        #if self.request.path == '/article/':
+        # if self.request.path == '/article/':
         #    posttype=Post.POST_TYPE[0][0]#(type='AR')
-        #else # '/news/'
+        # else # '/news/'
         #    posttype = Post.POST_TYPE[1][0]#(type='NS')
         # Или лучше задавать в urls.py через **kwargs, чтобы не забыть и не запутаться в имеющихся типах постов?
         # https://django.fun/docs/django/ru/4.0/topics/http/urls/
@@ -68,49 +68,70 @@ class PostList(ListView):
         context['path'] = self.request.path
         # **kwargs передаётся в класс из url.py верхнего уровня через path() ?
         # https://django.fun/docs/django/ru/4.0/topics/http/urls/
-        context['header'] = self.kwargs['header']#.items()# .values() #
-        # Добавляем в контекст объект фильтрации. TODO Как это действует - не понял
+        context['header'] = self.kwargs['header']  # .items()# .values() #
+        #
+#        context['post_author'] = self.get_queryset().get(post_author=str(self.request.user))#
+        # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
 
 
-class NewsDetail(DetailView):
+class PostDetail(DetailView):
     model = Post
-    template_name = 'newsdetail.html'
-    context_object_name = 'newsdetail'
+    template_name = 'post_detail.html'
+    context_object_name = 'post_detail'
+
 
 class PostSearch(ListView):
     model = Post
     ordering = '-time_of_creation'  # Поле для сортировки объектов, "-blabla" - обратный отсчёт
     template_name = 'post_search.html'
-    context_object_name = 'post_found'  # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
+    context_object_name = 'posts'  # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
     paginate_by = 2  # TODO - разобраться с переходом к следующей странице при пажинации
+    def get_queryset(self):
+        posttype = self.kwargs['posttype']
+        queryset = super().get_queryset().filter(type=posttype)
+        self.filterset = NewsFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
-class PostCreate(CreateView):   #TODO D4.5
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['time_now'] = datetime.utcnow()
+        context['path'] = self.request.path
+        context['header'] = self.kwargs['header']  # .items()# .values() #
+#        context['post_author'] = self.get_queryset().get(post_author=str(self.request.user))#
+        context['filterset'] = self.filterset
+        return context
+
+
+
+class PostCreate(CreateView):  # TODO D4.5
     # Указываем нашу разработанную форму
     form_class = PostForm
     # модель со списком постов
     model = Post
     # и новый шаблон, в котором используется форма.
     template_name = 'post_edit.html'
-#    success_url = reverse_lazy('news')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавление статьи'
-#        context['menu'] = menu
+        context['title'] = 'Добавление ' + str(self.kwargs['header']).lower()  # 'Добавление поста'
+        #        context['menu'] = menu
+        context['posttype'] = self.kwargs['posttype']
         return context
+
 
 class PostUpdate(UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
+
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('news') #TODO D4.5
+    success_url = reverse_lazy('news')  # TODO D4.5
 # В представлении удаления мы также не указываем форму.
 # Вместо неё появляется поле success_url, в которое мы должны указать,
 # куда перенаправить пользователя после успешного удаления товара.
-# Логика работы reverse_lazy() точно такая же, как и у функции reverse, которую мы использовали в моделе Product.
+# Логика работы reverse_lazy() точно такая же, как и у функции reverse, которую мы использовали в модели Product.

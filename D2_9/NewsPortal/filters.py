@@ -4,18 +4,14 @@ from .models import Post
 # Создаем свой набор фильтров выдачи данных для модели Post.
 # FilterSet - что-то вроде дженерика.
 class NewsFilter(FilterSet):
+    # класс FilterSet позволяет создавать фильтры через поля подкласса Meta
+    # см. https://django-filter.readthedocs.io/en/stable/ref/filterset.html#automatic-filter-generation-with-model
    class Meta:
-       # В Meta классе мы должны указать Django модель,
-       # в которой будем фильтровать записи.
-       model = Post
-       # В fields мы описываем по каким полям модели
-       # будет производиться фильтрация.
+       model = Post # модель, в которой будем фильтровать записи.
+       # В fields указывается, по каким полям модели будут работать создаваемые через Meta фильтры
        fields = {
-           # поиск по названию,
-           #    * по названию;
-           #    * по категории;
-           #    * позже указываемой даты.
-           'header': ['icontains'],
-           'category': ['icontains'],
-           'time_of_creation': [],
+           #    поиск по названию; по категории; позже указываемой даты.
+           'header': ['contains'],
+           'category': ['contains'],
+           'time_of_creation': ['date__gt'],
        }

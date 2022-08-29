@@ -17,3 +17,17 @@
 # по которому перенаправится неавторизованный пользователь при попытке перейти на защищенные страницы.
 
 # Для редактирования профиля автора/пользователя - переход на /account/profile/
+#from django.contrib.auth.decorators import login_required
+#@login_required
+#def view_foo(request):
+#    if request.method == 'GET':
+#        form = CreatePost()
+#        return render(request, 'testapp/create.html', {'form': form})
+#    elif request.method == 'POST':
+#        form = CreatePost(request.POST)
+#        if form.is_valid():
+#            post = form.save(commit=False)
+#            post.current_user = UserProfile.objects.get(user=request.user)
+#            post.save()
+#            return redirect('index')
+#
