@@ -24,7 +24,7 @@
                 <tr><td>{{item.post_author}}</td>
                     <td><h3>{{item.header|truncatechars:20|censor}}</h3></td>
                     <td>{{item.time_of_creation}}</td></tr>
-                <tr><td colspan="3">{{ item.text|truncatewords:50|censor }}</td></tr>
+                <tr><td colspan="3"><a href="{{ path }}{{item.id}}/">{{ item.text|truncatewords:50|censor }}</a></td></tr>
             {% endfor %}
         </table>
     {% else %} {# А можно использовать тэг {% empty %}, см. https://django.fun/docs/django/ru/4.0/ref/class-based-views/generic-display/ #}
