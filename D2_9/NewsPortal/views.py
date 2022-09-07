@@ -6,7 +6,7 @@ from django.urls import reverse, reverse_lazy  # TODO D4.5, использует
 # На ListView делаем список новостей, на DetailView - показ публикаций, и, возможно, авторов
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
-from .models import Post  # Класс Post, который мы определили в файле models.py
+from .models import Post, User, Author  # Класс Post, который мы определили в файле models.py
 from .filters import NewsFilter
 from .forms import PostForm
 
@@ -97,9 +97,11 @@ class PostSearch(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
-        context['path'] = self.request.path
+        context['path'] = str(self.request.path).removesuffix('search/')
         context['header'] = self.kwargs['header']  # .items()# .values() #
-#        context['post_author'] = self.get_queryset().get(post_author=str(self.request.user))#
+        #context['post_author'] = Author.#.get(post_author=self.request.user)#self.get_queryset().get(post_author=self.request.user)#
+        #Exception Type:	ValueError   # self.request.user - имя пользователя
+        #Exception Value:	Field 'id' expected a number but got 'AnonymousUser'.
         context['filterset'] = self.filterset
         return context
 
@@ -126,6 +128,13 @@ class PostUpdate(UpdateView):
     model = Post
     template_name = 'post_edit.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Редактирование ' + str(self.kwargs['header']).lower()  # 'Редактирование поста'
+        #        context['menu'] = menu
+        context['posttype'] = self.kwargs['posttype']
+        return context
+
 
 class PostDelete(DeleteView):
     model = Post
@@ -135,3 +144,10 @@ class PostDelete(DeleteView):
 # Вместо неё появляется поле success_url, в которое мы должны указать,
 # куда перенаправить пользователя после успешного удаления товара.
 # Логика работы reverse_lazy() точно такая же, как и у функции reverse, которую мы использовали в модели Product.
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Удаление ' + str(self.kwargs['header']).lower()  # 'Удаление поста'
+        #        context['menu'] = menu
+        context['posttype'] = self.kwargs['posttype']
+        return context

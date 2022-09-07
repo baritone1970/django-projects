@@ -3,9 +3,11 @@
 {% load custom_filters %} {# Ага, вот зачем файл custom_filters.py #}
 
 {# TODO Нужно менять тип поста, новость или статья, по условию #}
-{% block title %}Заголовок сообщения{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
     <h1>{{post_detail.header}}</h1>
     <p>{{post_detail.text}}</p>
+    {# нужно чтобы редактировал и удалял только автор #}
+    <p><a href="{{ path }}update/">Редактировать</a>   <a href="{{ path }}delete/">Удалить</a></p>
 {% endblock content %}

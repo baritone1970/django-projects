@@ -7,7 +7,7 @@
     {# D4.5 csrf_token добавляется в POST как скрытое поле для защиты от атаки CSRF, межсайтовой подделки запроса, #}
             {# https://docs.djangoproject.com/en/4.0/ref/csrf/ #}
     {% csrf_token %}
-    <!-- Поскольку не удалось сделать генерацию поля скрытой, вставляю поля здесь -->
+    <!-- Поскольку не удалось сделать генерацию поля скрытой, вставляю скрытые поля здесь -->
     <input type="hidden" name="type" id="id_type" value="{{ posttype }}">
     <input type="hidden" name="post_author" id="id_type" value="{{user}}">
     {{ form.as_p }}

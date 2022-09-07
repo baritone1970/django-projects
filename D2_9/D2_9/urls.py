@@ -23,6 +23,7 @@ urlpatterns = [
     # Для аутентификации
     #    path('', include('protect.urls')),             # Это приложение я не делал
     #    path('sign/', include('sign.urls')),           # и это тоже. Попробую ограничиться allauth
+#    path('accounts/profile/', news()),
     path('accounts/', include('allauth.urls')),  # это тоже файл из набора allauth, как у flatpages
     # Для отображения заголовка новостей или статей используем возможность include() дополнять **kwargs
     # https://django.fun/docs/django/ru/4.0/topics/http/urls/ - см. передача дополнительных параметров в include
