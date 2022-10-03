@@ -21,7 +21,7 @@ class PostList(ListView):
     ordering = '-time_of_creation'  # Поле для сортировки объектов, "-blabla" - обратный отсчёт
     template_name = 'posts.html'
     context_object_name = 'posts'  # Имя списка, через который обращаются ко всем объектам в html-шаблоне.
-    paginate_by = 2  # TODO - разобраться с переходом к следующей странице при пажинации
+    paginate_by = 2
 
     # наследуется метод .as_view(), переопределяем get_queryset() и get_context_data()
     # Можно ещё что-то с get_object() поделать, но вроде не обязательно.
@@ -99,7 +99,9 @@ class PostSearch(ListView):
         context['time_now'] = datetime.utcnow()
         context['path'] = str(self.request.path).removesuffix('search/')
         context['header'] = self.kwargs['header']  # .items()# .values() #
-        #context['post_author'] = Author.#.get(post_author=self.request.user)#self.get_queryset().get(post_author=self.request.user)#
+        #if
+        #context['post_author'] = not self.request.user
+        #.objects.get#.get(post_author=self.request.user)#self.get_queryset().get(post_author=self.request.user)#
         #Exception Type:	ValueError   # self.request.user - имя пользователя
         #Exception Value:	Field 'id' expected a number but got 'AnonymousUser'.
         context['filterset'] = self.filterset

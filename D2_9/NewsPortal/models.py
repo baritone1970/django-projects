@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 # связь «один к одному» с встроенной моделью пользователей User; (см. 2.6)
 # рейтинг пользователя.
 class Author(models.Model):
-    author_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    author_user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)# verbose_name="Автор"
     rating = models.IntegerField(default=0)
 
     # Метод update_rating() модели Author, который обновляет рейтинг пользователя, переданный в аргумент этого метода.
@@ -40,11 +40,13 @@ class Author(models.Model):
         self.rating = carma
         self.save()
 
-#    def __str__(self):      # Не забываем добавлять, чтобы было читаемое имя автора на странице!
-#        aid = self.author_user
-#        fullname = User.get_full_name().upper()
-#            #.objects.get_by_natural_key(aid)
-#        return fullname
+    def __str__(self):      # Не забываем добавлять,
+        # Для читаемого имени автора на странице!
+        # Для сравнения с {{ request.user }} тогда надо использовать {{ post_detail.post_author.author_user.username }}
+        fullname = str(self.author_user.first_name) + ' ' + str(self.author_user.last_name)
+        # Чтобы использовать более короткое {{ post_detail.post_author }} в сравнении с {{ request.user }}
+        #username = str(self.author_user.username)
+        return fullname
 
 
 # Модель Category
@@ -82,13 +84,13 @@ class Post(models.Model):
     news = "NS"
     POST_TYPE = [(article, 'Статья'), (news, 'Новость')]
 
-    post_author = models.ForeignKey(Author, on_delete=models.PROTECT)
+    post_author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
     type = models.CharField(max_length=2, choices=POST_TYPE, blank=False)#, default=article
-    time_of_creation = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category, through="PostCategory")
-    header = models.CharField(max_length=255)  # TODO,
-    text = models.TextField()  # TODO
-    rating = models.IntegerField(default=0)
+    time_of_creation = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    category = models.ManyToManyField(Category, through="PostCategory", verbose_name="Категория")
+    header = models.CharField(max_length=255, verbose_name="Название")  # TODO,
+    text = models.TextField(verbose_name="Текст")  # TODO
+    rating = models.IntegerField(default=0, verbose_name="Рейтинг")
 
     # Метод preview() модели Post, который возвращает начало статьи (предварительный просмотр) длиной 124 символа
     # и добавляет многоточие в конце.
@@ -149,6 +151,3 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
-
-#tmp=Post()
-#tmp.post_author.verbose_name

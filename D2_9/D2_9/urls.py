@@ -13,7 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls.py import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls.py'))
 """
-import django.contrib.flatpages.views
+#import django.contrib.flatpages.views
+from django.contrib.flatpages import views
 from django.contrib import admin
 from django.urls import include, path, re_path
 
@@ -23,7 +24,8 @@ urlpatterns = [
     # Для аутентификации
     #    path('', include('protect.urls')),             # Это приложение я не делал
     #    path('sign/', include('sign.urls')),           # и это тоже. Попробую ограничиться allauth
-#    path('accounts/profile/', news()),
+    # Эксперимент с использованием flatpages для страницы пользователя, пока неудачный
+    path('accounts/profile/', views.flatpage, kwargs={'url': '/profile/'}),
     path('accounts/', include('allauth.urls')),  # это тоже файл из набора allauth, как у flatpages
     # Для отображения заголовка новостей или статей используем возможность include() дополнять **kwargs
     # https://django.fun/docs/django/ru/4.0/topics/http/urls/ - см. передача дополнительных параметров в include
@@ -32,4 +34,6 @@ urlpatterns = [
     path('articles/', include('NewsPortal.urls'), {'header': 'Статьи', 'posttype': 'AR'}),
     # Эксперимент с отображением страниц с адресом, распознаваемым через регулярное выражение
 #    re_path(r'.*', django.contrib.flatpages.views.flatpage, kwargs={'url': '/doublecontent/'}),
+#    re_path(r'^(?P<url>.*/)$', views.flatpage),
+    #path('license/', views.flatpage, {'url': '/license/'}, name='license'),
 ]

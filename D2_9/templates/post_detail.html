@@ -1,13 +1,21 @@
 {% extends 'flatpages/default.html' %}
 
-{% load custom_filters %} {# Ага, вот зачем файл custom_filters.py #}
+{% load custom_filters %}   {# В файле NewsPortal/templatetag/custom_filters.py определён фильтр censor #}
+{% load custom_tags %}      {# В файле NewsPortal/templatetag/custom_tags.py определён тэг current_time для времени #}
 
 {# TODO Нужно менять тип поста, новость или статья, по условию #}
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-    <h1>{{post_detail.header}}</h1>
-    <p>{{post_detail.text}}</p>
+    <h1>{{post_detail.header|censor}}</h1>
+    <p>{{post_detail.text|censor}}</p>
     {# нужно чтобы редактировал и удалял только автор #}
+<hr>
+{% if request.user == post_detail.post_author.author_user.username %}
     <p><a href="{{ path }}update/">Редактировать</a>   <a href="{{ path }}delete/">Удалить</a></p>
+{% else %}
+    <p>Если бы Вы были {{ post_detail.post_author.author_user.username }}
+        ({{ post_detail.post_author }}), Вы могли бы редактировать текст.
+        Но Вы {{ request.user}} (((</p>
+{% endif %}
 {% endblock content %}
