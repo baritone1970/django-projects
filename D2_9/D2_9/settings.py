@@ -167,3 +167,108 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+# D13 Логгирование:
+# https://webdevblog.ru/loggirovanie-v-django-nachalnyj-obzor/
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        #время, уровень сообщения, сообщения.
+        'console': {
+            'format': '%(asctime)s %(levelname)-8s %(message)s'
+        },
+        #указанием времени, уровня логирования, модуля, в котором возникло сообщение (аргумент module) и само сообщение.
+        'general': {
+            'format': '%(asctime)s %(levelname)-8s %(module)s %(message)s'
+        },
+        #указывается время, уровень логирования, само сообщение, путь к источнику сообщения и стэк ошибки.
+        'errors': {
+            'format': '%(asctime)s %(levelname)-8s %(message)s %(pathname)s '
+        },
+        #время, уровень логирования, модуль и сообщение.
+        'security': {
+            'format': '%(asctime)s %(levelname)-8s %(module)s %(message)s'
+        },
+        #время, уровень логирования, само сообщение, путь к источнику сообщения
+        'mail': {
+            'format': '%(asctime)s %(levelname)-8s %(message)s %(pathname)s '
+        }
+    },
+    'filters': {
+        'require_debug_true': {     # фильтр, который пропускает записи только в случае, когда DEBUG = True.
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        #В консоль должны выводиться все сообщения уровня DEBUG и выше, включающие время, уровень сообщения, сообщения.
+        #Для сообщений WARNING и выше дополнительно должен выводиться путь к источнику события
+        #(используется аргумент pathname в форматировании). А для сообщений ERROR и CRITICAL еще должен выводить стэк ошибки
+        #(аргумент exc_info). Сюда должны попадать все сообщения с основного логгера django.
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],  # пропускать через фильтр
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        #В файл general.log должны выводиться сообщения уровня INFO и выше только с указанием
+        #времени, уровня логирования, модуля, в котором возникло сообщение (аргумент module) и само сообщение.
+        #Сюда также попадают сообщения с регистратора django.
+        'general': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'general',
+            'filename': 'general.log'
+        },
+        #В файл errors.log должны выводиться сообщения только уровня ERROR и CRITICAL. В сообщении указывается
+        #время, уровень логирования, само сообщение, путь к источнику сообщения и стэк ошибки.
+        #В этот файл должны попадать сообщения только из логгеров
+        #django.request, django.server, django.template, django.db_backends.
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'errors',
+            'filename': 'errors.log'
+        },
+        #В файл security.log должны попадать только сообщения, связанные с безопасностью, а значит только из
+        #логгера django.security. Формат вывода предполагает время, уровень логирования, модуль и сообщение.
+        'security': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'security',
+            'filename': 'security.log'
+        },
+        #На почту должны отправляться сообщения уровней ERROR и выше из django.request и django.server по формату
+        #время, уровень логирования, само сообщение, путь к источнику сообщения
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console']
+        },
+        'django.request': {
+            'level': 'INFO',
+            'handlers': ['mail_admins', 'errors']
+        },
+        'django.server': {
+            'level': 'INFO',
+            'handlers': ['mail_admins', 'errors']
+        },
+        'django.security': {
+            'level': 'INFO',
+            'handlers': ['security']
+        },
+        'django.template': {
+            'level': 'INFO',
+            'handlers': ['errors']
+        },
+        'django.db_backends': {
+            'level': 'INFO',
+            'handlers': ['errors']
+        }
+    }
+}
